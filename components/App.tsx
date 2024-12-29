@@ -21,25 +21,24 @@ export default function App() {
   async function startSession() {
     try {
       setIsLoading(true);
-      // Get an ephemeral key from the Next.js API route
+      // Step 1: Fetch ephemeral key
       const tokenResponse = await fetch("/api/token");
       if (!tokenResponse.ok) {
         const error = await tokenResponse.json();
         throw new Error(error.error || 'Failed to get token');
       }
-      
+
       const data = await tokenResponse.json();
-      
       if (!data?.client_secret?.value) {
         throw new Error('Invalid token response');
       }
-      
+
       const EPHEMERAL_KEY = data.client_secret.value;
 
-      // Add a small delay to ensure token is active
+      // Step 2: Brief delay to ensure ephemeral key is active
       await new Promise(resolve => setTimeout(resolve, 500));
 
-      // Create a peer connection
+      // Step 3: Create a RTCPeerConnection (example approach)
       const pc = new RTCPeerConnection();
 
       // Set up to play remote audio from the model
@@ -73,6 +72,7 @@ export default function App() {
         headers: {
           Authorization: `Bearer ${EPHEMERAL_KEY}`,
           "Content-Type": "application/sdp",
+          "OpenAI-Beta": "realtime=v1",
         },
       });
 

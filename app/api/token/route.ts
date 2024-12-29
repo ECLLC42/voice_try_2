@@ -15,6 +15,7 @@ export async function GET() {
       headers: {
         Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
         "Content-Type": "application/json",
+        "OpenAI-Beta": "realtime=v1",
       },
       body: JSON.stringify({
         model: "gpt-4o-realtime-preview-2024-12-17",
@@ -23,7 +24,7 @@ export async function GET() {
     });
 
     const responseText = await r.text();
-    console.log('OpenAI raw response:', responseText); // Debug log
+    console.log('OpenAI raw response:', responseText);
 
     if (!r.ok) {
       console.error('OpenAI API error:', responseText);
