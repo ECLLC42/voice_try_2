@@ -82,7 +82,8 @@ export default function App() {
       peerConnection.current = pc;
     } catch (error) {
       console.error('Failed to start session:', error);
-      alert(error.message || 'Failed to start session. Please try again.');
+      const e = error as Error;
+      alert(e.message || 'Failed to start session. Please try again.');
     } finally {
       setIsLoading(false);
     }

@@ -55,8 +55,9 @@ export async function GET() {
     return NextResponse.json(data);
   } catch (error) {
     console.error('Token route error:', error);
+    const e = error as Error;
     return NextResponse.json(
-      { error: error.message || 'Internal server error' },
+      { error: e.message || 'Internal server error' },
       { status: 500 }
     );
   }
