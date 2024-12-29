@@ -158,7 +158,7 @@ export default function App() {
         </div>
       </nav>
       
-      <section className="absolute top-16 left-0 right-[380px] bottom-0 flex">
+      <section className="absolute top-16 left-0 right-0 bottom-0 flex">
         <section className="absolute top-0 left-0 right-0 bottom-32 px-4 overflow-y-auto">
           <div className="flex flex-col gap-2">
             {events.map((event) => (
@@ -220,11 +220,6 @@ export default function App() {
             )}
           </div>
         </section>
-      </section>
-      
-      <section className="absolute top-16 w-[380px] right-0 bottom-0 p-4 bg-gray-50">
-        <h2 className="text-lg font-bold mb-4">Tools Panel</h2>
-        {/* Add your tools panel content here */}
       </section>
     </main>
   );
