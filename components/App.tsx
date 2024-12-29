@@ -12,6 +12,7 @@ interface Event {
 
 export default function App() {
   const [isSessionActive, setIsSessionActive] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [events, setEvents] = useState<Event[]>([]);
   const [dataChannel, setDataChannel] = useState<RTCDataChannel | null>(null);
   const peerConnection = useRef<RTCPeerConnection | null>(null);
@@ -19,12 +20,18 @@ export default function App() {
 
   async function startSession() {
     try {
+      setIsLoading(true);
       // Get an ephemeral key from the Next.js API route
       const tokenResponse = await fetch("/api/token");
+      if (!tokenResponse.ok) {
+        const error = await tokenResponse.json();
+        throw new Error(error.error || 'Failed to get token');
+      }
+      
       const data = await tokenResponse.json();
       
       if (!data?.client_secret?.value) {
-        throw new Error(data.error || 'Failed to get token');
+        throw new Error('Invalid token response');
       }
       
       const EPHEMERAL_KEY = data.client_secret.value;
@@ -75,8 +82,9 @@ export default function App() {
       peerConnection.current = pc;
     } catch (error) {
       console.error('Failed to start session:', error);
-      // Optionally show error to user
-      alert('Failed to start session. Please try again.');
+      alert(error.message || 'Failed to start session. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -165,10 +173,11 @@ export default function App() {
             {!isSessionActive ? (
               <button
                 onClick={startSession}
-                className="bg-red-600 text-white rounded-full p-4 flex items-center gap-2"
+                disabled={isLoading}
+                className={`${isLoading ? 'bg-gray-400' : 'bg-red-600'} text-white rounded-full p-4 flex items-center gap-2`}
               >
                 <CloudLightning size={16} />
-                <span>start session</span>
+                <span>{isLoading ? 'connecting...' : 'start session'}</span>
               </button>
             ) : (
               <>

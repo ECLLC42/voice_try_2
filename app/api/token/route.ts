@@ -2,6 +2,14 @@ import { NextResponse } from 'next/server';
 
 export async function GET() {
   try {
+    if (!process.env.OPENAI_API_KEY) {
+      console.error('OPENAI_API_KEY is not set');
+      return NextResponse.json(
+        { error: 'API key not configured' },
+        { status: 500 }
+      );
+    }
+
     const r = await fetch("https://api.openai.com/v1/realtime/sessions", {
       method: "POST",
       headers: {
@@ -14,19 +22,32 @@ export async function GET() {
       }),
     });
 
+    const responseText = await r.text();
+    console.log('OpenAI raw response:', responseText); // Debug log
+
     if (!r.ok) {
-      const error = await r.text();
+      console.error('OpenAI API error:', responseText);
       return NextResponse.json(
-        { error: `OpenAI API error: ${error}` },
+        { error: `OpenAI API error: ${responseText}` },
         { status: r.status }
       );
     }
 
-    const data = await r.json();
-    
-    if (!data?.client_secret?.value) {
+    let data;
+    try {
+      data = JSON.parse(responseText);
+    } catch (e) {
+      console.error('Failed to parse OpenAI response:', e);
       return NextResponse.json(
-        { error: 'Invalid response from OpenAI API' },
+        { error: 'Invalid JSON response from OpenAI' },
+        { status: 500 }
+      );
+    }
+
+    if (!data?.client_secret?.value) {
+      console.error('Invalid response structure:', data);
+      return NextResponse.json(
+        { error: 'Invalid response structure from OpenAI' },
         { status: 500 }
       );
     }
@@ -35,7 +56,7 @@ export async function GET() {
   } catch (error) {
     console.error('Token route error:', error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: error.message || 'Internal server error' },
       { status: 500 }
     );
   }
