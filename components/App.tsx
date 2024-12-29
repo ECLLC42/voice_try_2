@@ -36,6 +36,9 @@ export default function App() {
       
       const EPHEMERAL_KEY = data.client_secret.value;
 
+      // Add a small delay to ensure token is active
+      await new Promise(resolve => setTimeout(resolve, 500));
+
       // Create a peer connection
       const pc = new RTCPeerConnection();
 
