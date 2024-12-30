@@ -1,4 +1,4 @@
-// File: /Users/jeffreywilliam/Desktop/Voice_Next/openai-realtime-console/app/api/token/route.ts
+// File: /Users/jeffreywilliam/Desktop/New Try/voice_try_2/app/api/token/route.ts
 import * as entry from '../../../../../app/api/token/route.js'
 import type { NextRequest } from 'next/server.js'
 

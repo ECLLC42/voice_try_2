@@ -1,4 +1,4 @@
-// File: /Users/jeffreywilliam/Desktop/Voice_Next/openai-realtime-console/app/page.tsx
+// File: /Users/jeffreywilliam/Desktop/New Try/voice_try_2/app/page.tsx
 import * as entry from '../../../app/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
